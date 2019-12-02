@@ -15,7 +15,7 @@ function getData() {
   }).then((res) => {
     const list = res.data
     list.forEach((item) => {
-      if (item.week == '四' && item.pm_info == '约满') {
+      if (item.week == '四' && item.pm_info != '约满') {
         console.log(item.pm_info)
         send()
       }
