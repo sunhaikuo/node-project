@@ -14,17 +14,19 @@ function getData() {
     params: { "doctorCode": "2131", "halfday": true }
   }).then((res) => {
     const list = res.data
-    list.forEach((item) => {
-      if (item.week == '四' && item.pm_info != '约满') {
-        console.log(item.pm_info)
-        send()
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i]
+      if (['约满', '', '停诊'].indexOf(item.pm_info) === -1) {
+        send(item.pm_info)
+        break
       }
-    })
-    // console.log(res.data)
+    }
   })
 }
+
 
 module.exports = function getNum(params) {
   setInterval(getData, 1000 * 60)
 }
+
 
