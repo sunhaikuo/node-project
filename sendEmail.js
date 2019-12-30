@@ -14,18 +14,21 @@ let transporter = nodemailer.createTransport({
   }
 });
 
+let sendInfo = ''
+
 let mailOptions = {
-  from: '"JavaScript之禅" <369019497@qq.com>', // sender address
-  to: '3327849192@qq.com', // list of receivers
-  subject: 'Hello', // Subject line
+  from: '"阜外医院挂号" <369019497@qq.com>', // sender address
+  to: 'sunhaikuo_2019@qq.com', // list of receivers
+  subject: '挂号', // Subject line
   // 发送text或者html格式
   // text: 'Hello world?', // plain text body
-  html: '<b>有号了！</b>' // html body
+  html: `<b>Yes！${sendInfo}</b>` // html body
 };
 
 
 
 module.exports = function send(params) {
+  sendInfo = params
   // send mail with defined transport object
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
