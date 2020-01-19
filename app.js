@@ -44,6 +44,10 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/api/detail', async (req, res) => {
+  console.log('Hello ')
+})
+
+app.get('/api/detail', async (req, res) => {
   const { sid } = req.query
   const body = await getContent(sid)
   res.send(body)
