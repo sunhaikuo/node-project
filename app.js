@@ -44,7 +44,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/api/detail', async (req, res) => {
-  console.log('Hello 21')
+  console.log('Hello 3')
 })
 
 app.get('/api/detail', async (req, res) => {
