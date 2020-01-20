@@ -58,7 +58,7 @@ app.get('/api/git', (req, res) => {
 
 app.post('/api/git', (req, res) => {
   execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
-  res.send('ok - p')
+  res.send('ok - p1')
 })
 
 app.get('/api/bookmark', async (req, res) => {
