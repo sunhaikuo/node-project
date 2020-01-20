@@ -51,7 +51,7 @@ app.get('/api/detail', async (req, res) => {
   res.send(body)
 })
 
-app.get('/api/git', () => {
+app.get('/api/git', (req, res) => {
   execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
   res.send('Ok')
 })
