@@ -1,7 +1,9 @@
 var request = require("request");
 var express = require('express');
+const path = require('path')
 const bookmark = require('./bookmark')
 var bodyParser = require("body-parser")
+const { execSync } = require('child_process')
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
@@ -49,6 +51,10 @@ app.get('/api/detail', async (req, res) => {
   res.send(body)
 })
 
+app.get('/api/git', () => {
+  execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
+})
+
 app.get('/api/bookmark', async (req, res) => {
   console.log('bookmark', bookmark)
   const bookmarks = await bookmark.selectBookmarks()
@@ -75,5 +81,6 @@ app.delete('/api/bookmark', async (req, res) => {
 app.listen(5000, function () {
   console.log('Example app listening on port 5000!');
   // getNum()
+  execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
 });
 
