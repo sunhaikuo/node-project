@@ -40,7 +40,7 @@ function getContent(sid) {
   })
 }
 
-app.get('/', async (req, res) => {
+app.get('/api', async (req, res) => {
   const body = await getWeiboList()
   res.send(body)
 })
