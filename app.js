@@ -40,8 +40,26 @@ function getContent(sid) {
   })
 }
 
+
+function getComments(mid) {
+  const url = `https://api.weibo.cn/2/comments/build_comments?gsid=_2A25zE5RbDeRxGeBO41oT9SbLyD6IHXVRiKCTrDV6PUJbkdAKLVb9kWpNRbgUgl7f32cqAHaC1Ls0X9PeVl1MirD5&sensors_mark=0&wm=3333_2001&sensors_is_first_day=false&from=10A1293010&b=0&c=iphone&networktype=wifi&skin=default&v_p=81&v_f=1&s=f6774209&sensors_device_id=F30F16C3-C2DD-483D-B4EE-BB9FF831E70A&lang=zh_CN&sflag=1&ua=iPhone12,5__weibo__10.1.2__iphone__os13.3&ft=0&aid=01A-GfF8-NJ3WvuRJbTQEgz8EUewecnx5I6QOKMPmHIts8nh8.&is_reload=1&is_append_blogs=1&mid=${mid}&refresh_type=1&uicode=10000002&count=20&trim_level=1&moduleID=feed&is_show_bulletin=2&fetch_level=0&_status_id=4464361231827304&fromlog=102803&id=4464361231827304&lack=0&request_type=default&luicode=10000495&orifid=102803&featurecode=10000001&oriuicode=10000495&since_id=0&is_mix=1&page=0&lfid=102803&rid=0_0_0_3069719993828589219_0_0_0&launchid=10000365--x`
+  return new Promise((resolve, reject) => {
+    request.get(getOption(url), function (error, response, body) {
+      console.info('body: ' + body);
+      resolve(JSON.parse(body))
+    });
+  })
+}
+
 app.get('/api', async (req, res) => {
   const body = await getWeiboList()
+  res.send(body)
+})
+
+
+app.get('/api/comments', async (req, res) => {
+  const { mid } = req.query
+  const body = await getComments(mid)
   res.send(body)
 })
 
