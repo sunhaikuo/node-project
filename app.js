@@ -81,8 +81,10 @@ app.get('/api/image', async (req, res) => {
       writeStream.end();
       res.setHeader("Content-Type", `image/${ext}`)
       res.sendFile(filePath, () => {
-        // fs.unlink(filePath, () => {
-        // })
+        setTimeout(() => {
+          fs.unlink(filePath, () => { })
+        }, 60 * 1000)
+
       })
     });
   }
