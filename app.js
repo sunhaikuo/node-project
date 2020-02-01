@@ -110,7 +110,7 @@ app.get('/api/git', (req, res) => {
 app.post('/api/git', (req, res) => {
   syncGit()
   res.send('ok - p1')
-})
+})  
 
 function syncGit() {
   execSync(
