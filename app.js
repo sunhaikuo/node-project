@@ -112,8 +112,7 @@ app.post('/api/git', (req, res) => {
 })
 
 function syncGit() {
-  execSync(
-    `
+  execSync(`
             git reset HEAD --hard;
             git clean -fd;
             git pull --force;
