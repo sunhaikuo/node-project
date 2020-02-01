@@ -80,9 +80,8 @@ app.get('/api/image', async (req, res) => {
     writeStream.on('finish', function () {
       writeStream.end();
       res.setHeader("Content-Type", `image/${ext}`)
-      res.sendFile(filePath,()=> {
+      res.sendFile(filePath, () => {
         fs.unlink(filePath, () => {
-          console.log(`${filePath} 删除成功`)
         })
       })
     });
@@ -110,11 +109,11 @@ app.get('/api/git', (req, res) => {
 app.post('/api/git', (req, res) => {
   syncGit()
   res.send('ok - p1')
-})     
+})
 
 function syncGit() {
   execSync(
-            `
+    `
             git reset HEAD --hard;
             git clean -fd;
             git pull --force;
