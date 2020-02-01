@@ -6,14 +6,14 @@ var bodyParser = require("body-parser")
 const { execSync } = require('child_process')
 var app = express();
 
-app.all('*', function(req, res, next) {  
-  res.header("Access-Control-Allow-Origin", "*");  
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");  
-  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
-  res.header("X-Powered-By",' 3.2.1')  
-  res.header("Content-Type", "application/json;charset=utf-8");  
-  next();  
-});  
+app.all('*', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By", ' 3.2.1')
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
+});
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
@@ -80,14 +80,19 @@ app.get('/api/detail', async (req, res) => {
 })
 
 app.get('/api/git', (req, res) => {
-  execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
+  syncGit()
   res.send('ok - g3')
 })
 
 app.post('/api/git', (req, res) => {
-  execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
+  syncGit()
   res.send('ok - p1')
 })
+
+function syncGit() {
+  execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
+  execSync('cd /home/ubuntu/GitHub/flutter/flutter_weibo;git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
+}
 
 app.get('/api/bookmark', async (req, res) => {
   console.log('bookmark', bookmark)
