@@ -1,5 +1,6 @@
 var request = require("request");
 var express = require('express');
+const fs = require('fs')
 const path = require('path')
 const bookmark = require('./bookmark')
 var bodyParser = require("body-parser")
@@ -66,6 +67,28 @@ app.get('/api', async (req, res) => {
   res.send(body)
 })
 
+app.get('/api/image', async (req, res) => {
+  const { url } = req.query
+  if (url) {
+    const index = url.lastIndexOf('.')
+    const ext = url.substr(index + 1)
+    const readStream = request.get(url)
+    const filename = Date.now()
+    const filePath = path.resolve(__dirname, `images/${filename}.${ext}`)
+    const writeStream = fs.createWriteStream(filePath);
+    readStream.pipe(writeStream);
+    writeStream.on('finish', function () {
+      writeStream.end();
+      res.setHeader("Content-Type", `image/${ext}`)
+      res.sendFile(filePath,()=> {
+        fs.unlink(filePath, () => {
+          console.log(`${filePath} 删除成功`)
+        })
+      })
+    });
+  }
+})
+
 
 app.get('/api/comments', async (req, res) => {
   const { mid } = req.query
@@ -91,7 +114,12 @@ app.post('/api/git', (req, res) => {
 
 function syncGit() {
   execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
-  execSync('cd /home/ubuntu/GitHub/flutter/flutter_weibo;git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
+  execSync(`
+            cd /home/ubuntu/GitHub/flutter/flutter_weibo;
+            git reset HEAD --hard;git clean -fd;
+            git pull --force;
+            cp -r /home/ubuntu/GitHub/flutter/flutter_weibo/build/web /var/www/html;
+          `, { cwd: __dirname })
 }
 
 app.get('/api/bookmark', async (req, res) => {
@@ -120,6 +148,5 @@ app.delete('/api/bookmark', async (req, res) => {
 app.listen(5000, function () {
   console.log('Example app listening on port 5000!');
   // getNum()
-  execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
 });
 
