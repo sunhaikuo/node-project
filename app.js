@@ -72,7 +72,7 @@ app.get('/api/image', async (req, res) => {
   if (url) {
     const index = url.lastIndexOf('.')
     const ext = url.substr(index + 1)
-    const readStream = request.get(url)
+    const readStream = request.get({ url, timeout: 30000 })
     const filename = Date.now()
     const filePath = path.resolve(__dirname, `images/${filename}.${ext}`)
     const writeStream = fs.createWriteStream(filePath);
