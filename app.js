@@ -113,7 +113,13 @@ app.post('/api/git', (req, res) => {
 })
 
 function syncGit() {
-  execSync('git reset HEAD --hard;git clean -fd;git pull --force', { cwd: __dirname })
+  execSync(
+            `
+            git reset HEAD --hard;
+            git clean -fd;
+            git pull --force;
+            pm2 restart all;
+            `, { cwd: __dirname })
   execSync(`
             cd /home/ubuntu/GitHub/flutter/flutter_weibo;
             git reset HEAD --hard;git clean -fd;
