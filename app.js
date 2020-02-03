@@ -84,7 +84,6 @@ app.get('/api/image', async (req, res) => {
         setTimeout(() => {
           fs.unlink(filePath, () => { })
         }, 60 * 1000)
-
       })
     });
   }
@@ -155,4 +154,3 @@ app.listen(5000, function () {
   console.log('Example app listening on port 5000!');
   // getNum()
 });
-
