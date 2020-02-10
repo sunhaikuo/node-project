@@ -71,7 +71,7 @@ function getComments(mid) {
   })
 }
 
-function getChannle() {
+function getChannel() {
   const url = 'https://api.weibo.cn/2/groups/allgroups?gsid=_2A25zRXHhDeRxGeBG4lYV9SzNzjuIHXVuU4IprDV6PUJbj9AKLValkWpNQfZvHZohquHJ4oH2ZNQOpQF8lD0Yhm_I&wm=3333_2001&sensors_is_first_day=true&from=10A1293010&sensors_device_id=019C6138-8C3E-462B-88CD-989677587E12&c=iphone&v_p=81&skin=default&s=7b470c23&v_f=1&networktype=wifi&b=0&lang=zh_CN&ua=iPhone12,5__weibo__10.1.2__iphone__os13.3&sflag=1&ft=0&aid=01AwC-VV0DeGEGMYFR4m_R9GzRErk_SEy-Q3NRyBluSBrnkIQ.&is_new_segment=1&fetch_hot=1&position=feed&is_new_hot_tab_edit=0&cum=146686B1'
   return new Promise((resolve, reject) => {
     request.get(getOption(url), function (error, response, body) {
@@ -87,8 +87,8 @@ app.get('/api', async (req, res) => {
   res.send(body)
 })
 
-app.get('/api/channle', async (req, res) => {
-  const body = await getChannle()
+app.get('/api/channel', async (req, res) => {
+  const body = await getChannel()
   res.send(body)
 })
 
