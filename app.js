@@ -71,8 +71,8 @@ function getComments(mid) {
   })
 }
 
-function getGroups() {
-  const url = 'https://api.weibo.cn/2/groups/allgroups?skin=default&c=iphone&lang=zh_CN&did=aaac8f5284a877d87ec2c44cd696b454&sflag=0&s=6341b283&ua=iPhone12,5__weibo__10.1.2__iphone__os13.3&aid=01AwC-VV0DeGEGMYFR4m_R9GzRErk_SEy-Q3NRyBluSBrnkIQ.&wm=3333_2001&sensors_device_id=7F338384-2582-4B19-B96E-D6E87B388DF7&sensors_is_first_day=true&v_f=1&ft=0&uid=1014949925787&v_p=81&gsid=_2AkMpHF5-f8NhqwJRmfwcyGLrbohwwg_EieKfQK-lJRM3HRl-wT9jqlQItRV6AuVTRhjm3D8iLFJsQmUqm3UnwXHLplL5&from=10A1293010&networktype=wifi&checktoken=6308f405c5de7d08747cdc259a138423&b=0&is_need_hot=1&is_new_segment=1&fetch_hot=1&position=feed&is_new_hot_tab_edit=0'
+function getChannle() {
+  const url = 'https://api.weibo.cn/2/groups/allgroups?gsid=_2A25zRXHhDeRxGeBG4lYV9SzNzjuIHXVuU4IprDV6PUJbj9AKLValkWpNQfZvHZohquHJ4oH2ZNQOpQF8lD0Yhm_I&wm=3333_2001&sensors_is_first_day=true&from=10A1293010&sensors_device_id=019C6138-8C3E-462B-88CD-989677587E12&c=iphone&v_p=81&skin=default&s=7b470c23&v_f=1&networktype=wifi&b=0&lang=zh_CN&ua=iPhone12,5__weibo__10.1.2__iphone__os13.3&sflag=1&ft=0&aid=01AwC-VV0DeGEGMYFR4m_R9GzRErk_SEy-Q3NRyBluSBrnkIQ.&is_new_segment=1&fetch_hot=1&position=feed&is_new_hot_tab_edit=0&cum=146686B1'
   return new Promise((resolve, reject) => {
     request.get(getOption(url), function (error, response, body) {
       console.info('body: ' + body);
@@ -87,8 +87,8 @@ app.get('/api', async (req, res) => {
   res.send(body)
 })
 
-app.get('/api/group', async (req, res) => {
-  const body = await getGroups()
+app.get('/api/channle', async (req, res) => {
+  const body = await getChannle()
   res.send(body)
 })
 
