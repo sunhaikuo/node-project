@@ -25,16 +25,23 @@ function getOption(url) {
     url,
     // json: true,
     headers: {
-      "content-type": "application/x-www-form-urlencoded; charset=utf-8",
+      "content-type": "application/x-www-form-urlencoded;charset=utf-8",
     },//req.headers
-    body: "extparam=discover%7Cnew_feed&fid=102803&uicode=10000495&count=25&trim_level=1&trim_page_recom=0&containerid=102803&fromlog=102803&uid=6894452157&orifid=&refresh_sourceid=10000365&featurecode=10000001&preAdInterval=2&oriuicode=&daily_total_times=9&since_id=4413935291614270&need_jump_scheme=1"
+    body: "extparam=discover%7Cnew_feed&fid=extparam=discover%7Cnew_feed&fid=102803_ctg1_600059_-_ctg1_600059&containerid=102803_ctg1_600059_-_ctg1_600059"
   }
 }
 
-function getWeiboList() {
-  const url = 'https://api.weibo.cn/2/statuses/unread_hot_timeline?gsid=_2A25zDRKEDeRxGeBO41oT9SbLyD6IHXVRmyFMrDV6PUJbkdAKLWHEkWpNRbgUgipW6LAu9FJlfHoZrTc2Rxkz0dCG&sensors_mark=0&wm=3333_2001&sensors_is_first_day=true&from=109C393010&b=0&c=iphone&networktype=wifi&skin=default&v_p=80&v_f=1&s=7f247ef8&sensors_device_id=0A3D4E51-89B6-465D-9C31-2A1301EBD21D&lang=zh_CN&sflag=1&ua=iPhone8,1__weibo__9.12.3__iphone__os12.4&ft=0&aid=01AylOcmGTpYv4mLLh2Lb0ibHWogzZWpF5xMfSOxWrEckgXwo.&launchid=10000365--x'
+function getWeiboList(fid, containerid) {
+  const url = 'https://api.weibo.cn/2/statuses/unread_hot_timeline?gsid=_2A25zDRKEDeRxGeBO41oT9SbLyD6IHXVRmyFMrDV6PUJbkdAKLWHEkWpNRbgUgipW6LAu9FJlfHoZrTc2Rxkz0dCG&from=109C393010&c=iphone&networktype=wifi&s=7f247ef8&sensors_device_id=0A3D4E51-89B6-465D-9C31-2A1301EBD21D&lang=zh_CN'
   return new Promise((resolve, reject) => {
-    request.post(getOption(url), function (error, response, body) {
+    request.post({
+      url,
+      // json: true,
+      headers: {
+        "content-type": "application/x-www-form-urlencoded;charset=utf-8",
+      },//req.headers
+      body: `extparam=discover%7Cnew_feed&fid=${fid}&containerid=${containerid}`
+    }, function (error, response, body) {
       console.info('body: ' + body);
       resolve(JSON.parse(body))
     });
@@ -62,8 +69,24 @@ function getComments(mid) {
   })
 }
 
+function getGroups() {
+  const url = 'https://api.weibo.cn/2/groups/allgroups?skin=default&c=iphone&lang=zh_CN&did=aaac8f5284a877d87ec2c44cd696b454&sflag=0&s=6341b283&ua=iPhone12,5__weibo__10.1.2__iphone__os13.3&aid=01AwC-VV0DeGEGMYFR4m_R9GzRErk_SEy-Q3NRyBluSBrnkIQ.&wm=3333_2001&sensors_device_id=7F338384-2582-4B19-B96E-D6E87B388DF7&sensors_is_first_day=true&v_f=1&ft=0&uid=1014949925787&v_p=81&gsid=_2AkMpHF5-f8NhqwJRmfwcyGLrbohwwg_EieKfQK-lJRM3HRl-wT9jqlQItRV6AuVTRhjm3D8iLFJsQmUqm3UnwXHLplL5&from=10A1293010&networktype=wifi&checktoken=6308f405c5de7d08747cdc259a138423&b=0&is_need_hot=1&is_new_segment=1&fetch_hot=1&position=feed&is_new_hot_tab_edit=0'
+  return new Promise((resolve, reject) => {
+    request.get(getOption(url), function (error, response, body) {
+      console.info('body: ' + body);
+      resolve(JSON.parse(body))
+    });
+  })
+}
+
 app.get('/api', async (req, res) => {
-  const body = await getWeiboList()
+  const { fid, containerid } = req.query
+  const body = await getWeiboList(fid, containerid)
+  res.send(body)
+})
+
+app.get('/api/group', async (req, res) => {
+  const body = await getGroups()
   res.send(body)
 })
 
