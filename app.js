@@ -44,7 +44,6 @@ function getWeiboList(fid, containerid, max_id) {
   console.log(param);
   return new Promise((resolve, reject) => {
     request.post(param, function (error, response, body) {
-      console.info('body: ' + body);
       resolve(JSON.parse(body))
     });
   })
@@ -54,7 +53,6 @@ function getContent(sid) {
   const url = `https://api.weibo.cn/2/comments/build_comments?gsid=_2A25zIHWoDeRxGeBO41oT9SbLyD6IHXVudI5grDV6PUJbkdAKLWHEkWpNRbgUgndNH9DarSWJbDun67K11e0cMDNf&sensors_mark=0&wm=3333_2001&sensors_is_first_day=false&from=10A1193010&b=0&c=iphone&networktype=wifi&skin=default&v_p=81&v_f=1&s=be08ec41&sensors_device_id=0A3D4E51-89B6-465D-9C31-2A1301EBD21D&lang=zh_CN&sflag=1&ua=iPhone8,1__weibo__10.1.1__iphone__os12.4&ft=0&aid=01AylOcmGTpYv4mLLh2Lb0ibHWogzZWpF5xMfSOxWrEckgXwo.&is_reload=1&is_append_blogs=1&mid=4462461660985878&refresh_type=1&uicode=10000002&count=20&trim_level=1&moduleID=feed&is_show_bulletin=2&sourcetype=feed&fetch_level=0&fromlog=100016088258732&id=${sid}&lack=0&luicode=10000001&request_type=default&orifid=100016088258732&featurecode=10000001&oriuicode=10000001&since_id=0&is_mix=1&page=0&lfid=100016088258732&rid=10_0_8_3079867146144091573_1_0_0&launchid=10000365--x`
   return new Promise((resolve, reject) => {
     request.get(getOption(url), function (error, response, body) {
-      console.info('body: ' + body);
       resolve(JSON.parse(body))
     });
   })
@@ -65,7 +63,6 @@ function getComments(mid) {
   const url = `https://api.weibo.cn/2/comments/build_comments?gsid=_2A25zE5RbDeRxGeBO41oT9SbLyD6IHXVRiKCTrDV6PUJbkdAKLVb9kWpNRbgUgl7f32cqAHaC1Ls0X9PeVl1MirD5&sensors_mark=0&wm=3333_2001&sensors_is_first_day=false&from=10A1293010&b=0&c=iphone&networktype=wifi&skin=default&v_p=81&v_f=1&s=f6774209&sensors_device_id=F30F16C3-C2DD-483D-B4EE-BB9FF831E70A&lang=zh_CN&sflag=1&ua=iPhone12,5__weibo__10.1.2__iphone__os13.3&ft=0&aid=01A-GfF8-NJ3WvuRJbTQEgz8EUewecnx5I6QOKMPmHIts8nh8.&is_reload=1&is_append_blogs=1&mid=${mid}&refresh_type=1&uicode=10000002&count=20&trim_level=1&moduleID=feed&is_show_bulletin=2&fetch_level=0&_status_id=${mid}&fromlog=102803&id=${mid}&lack=0&request_type=default&luicode=10000495&orifid=102803&featurecode=10000001&oriuicode=10000495&since_id=0&is_mix=1&page=0&lfid=102803&rid=0_0_0_3069719993828589219_0_0_0&launchid=10000365--x`
   return new Promise((resolve, reject) => {
     request.get(getOption(url), function (error, response, body) {
-      console.info('body: ' + body);
       resolve(JSON.parse(body))
     });
   })
@@ -76,7 +73,6 @@ function getChannel() {
   const url = 'https://api.weibo.cn/2/groups/allgroups?gsid=_2A25zRXHhDeRxGeBG4lYV9SzNzjuIHXVuU4IprDV6PUJbj9AKLValkWpNQfZvHZohquHJ4oH2ZNQOpQF8lD0Yhm_I&wm=3333_2001&sensors_is_first_day=true&from=10A1293010&sensors_device_id=019C6138-8C3E-462B-88CD-989677587E12&c=iphone&v_p=81&skin=default&s=7b470c23&v_f=1&networktype=wifi&b=0&lang=zh_CN&ua=iPhone12,5__weibo__10.1.2__iphone__os13.3&sflag=1&ft=0&aid=01AwC-VV0DeGEGMYFR4m_R9GzRErk_SEy-Q3NRyBluSBrnkIQ.&is_new_segment=1&fetch_hot=1&position=feed&is_new_hot_tab_edit=0&cum=146686B1'
   return new Promise((resolve, reject) => {
     request.get(getOption(url), function (error, response, body) {
-      console.info('body: ' + body);
       resolve(JSON.parse(body))
     });
   })
