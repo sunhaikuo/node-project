@@ -41,7 +41,6 @@ function getWeiboList(fid, containerid, max_id) {
     body: `extparam=discover%7Cnew_feed&fid=${fid}&uicode=10000495&count=25&trim_level=1&trim_page_recom=0&containerid=${containerid}&fromlog=102803&uid=6894452157&orifid=&refresh_sourceid=10000365&featurecode=10000001&preAdInterval=2&oriuicode=&daily_total_times=9&since_id=4413935291614270&need_jump_scheme=1&${max_id == '0' ? '' : `max_id=${max_id}`}`
     // body: `extparam=discover%7Cnew_feed&fid=${fid}&containerid=${containerid}`
   }
-  console.log(param)
   return new Promise((resolve, reject) => {
     request.post(param, function (error, response, body) {
       console.info('body: ' + body);
@@ -156,25 +155,19 @@ function syncGit() {
 }
 
 app.get('/api/bookmark', async (req, res) => {
-  console.log('bookmark', bookmark)
   const bookmarks = await bookmark.selectBookmarks()
-  console.log('bookmarks', bookmarks)
   res.send(bookmarks)
 })
 
 app.post('/api/bookmark', async (req, res) => {
   const { title, url } = req.body
-  console.log('value', title, url)
   const result = await bookmark.insertBookmarks(title, url)
-  console.log('post result', result)
   res.send(result)
 })
 
 app.delete('/api/bookmark', async (req, res) => {
   const { id } = req.query
-  console.log('id', id, req.query)
   const result = await bookmark.deleteBookmark(id)
-  console.log('delete result', result)
   res.send(result)
 })
 
