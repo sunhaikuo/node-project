@@ -2,7 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 const bodyParser = require("body-parser");
+const path = require('path');
 const app = express();
+// 静态资源
+app.use('/static', express.static('static'));
 app.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no, initial-scale=1">
+	<title>长颈鹿苹果IOS版本下载 - 官方网站</title>
+	<meta name="keywords" content="黑洞加速器，苹果IOS版本，官方网站">
+	<meta name="description" content="免费加速器，保障隐私安全，不限流量。黑洞加速器保障 您从任何地方，访问您所需的内容，银行级的最新加密算法，确保数据传输中的隐私安全。">
+	<meta name="robots" content="all">
+	<link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
+	<link href="./css/base.css?3" rel="stylesheet">
+	<script src="./js/jquery-1.11.1.min.js"></script>
+	<script src="./js/base.js"></script>
+</head>
+
+<body>
+	<div class="content">
+		<div class="index-banner">
+			<div class="index-bg">
+				<div class="banner-primary banner-primary-ios">
+					<div class="caption">
+						<h1><img src="./images/icon.png" alt="">长颈鹿 App</h1>
+						<p>让阅读更专注</p>
+					</div>
+					<div class="iosdown-step">
+						<div class="iosdown-item">
+							<div class="card">
+								<p><span class="num">step1</span>先安装[TestFlight]，后返回本页。如已安装，请直接第2步</p>
+
+								<a class="btn btn-white" target="_blank" href="https://apps.apple.com/cn/app/testflight/id899247664">
+									<img class="flight" src="./images/down_flight.png" alt="">
+									<span>下载苹果TestFlight</span>
+								</a>
+							</div>
+						</div>
+						<div class="iosdown-item">
+							<div class="card">
+								<p><span class="num">step2</span>完成步骤1之后，<br>安装或升级长颈鹿 App</p>
+								<a class="btn" target="_blank" href="https://testflight.apple.com/join/H5bWIJ6b">
+									<img class="ios" src="./images/down_ios.png" alt="">
+									<span>下载长颈鹿 App</span>
+								</a>
+							</div>
+						</div>
+						<div class="card tips">
+							<p style="font-size:16px"><span><a href="/androidstore/">安卓下载地址 &gt;&gt; </a></span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="weixin-browser" id="weixin-browser" style="pointer-events: none;">
+		<div class="weixin-mask">
+			<div class="weixin-guide"><img src="./images/wechat.png" alt=""></div>
+		</div>
+	</div>
+	<script>
+		var browser = {
+			versions: function () {
+				var u = navigator.userAgent, app = navigator.appVersion;
+				return {
+					trident: u.indexOf('Trident') > -1, //IE内核
+					presto: u.indexOf('Presto') > -1, //opera内核
+					webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+					gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,//火狐内核
+					mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+					ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+					android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1, //android终端
+					iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+					iPad: u.indexOf('iPad') > -1, //是否iPad
+					webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
+					weixin: u.indexOf('MicroMessenger') > -1, //是否微信 （2015-01-22新增）
+					qq: u.match(/\sQQ/i) == " qq" //是否QQ
+				};
+			}(), language: (navigator.browserLanguage || navigator.language).toLowerCase()
+		}
+
+		$(function () {
+			if (browser.versions.mobile) {
+				var ua = navigator.userAgent.toLowerCase();
+				if (ua.match(/MicroMessenger/i) == "micromessenger") {
+					$("#weixin-browser").show();	//在微信中打开
+				}
+				if (ua.match(/WeiBo/i) == "weibo") {
+					$("#weixin-browser").show();	//在新浪微博客户端打开
+				}
+				if (ua.match(/baidu/i) == "baidu") {
+					$("#weixin-browser").show();	//在新浪微博客户端打开
+				}
+				if (ua.match(/MQQBrowser/i) == "mqqbroser" && ua.match(/ QQ/i) != " qq") {
+					$("#weixin-browser").show();	//在QQ空间打开
+				}
+				if (browser.versions.ios) {
+					$("#androidPrimary").hide();
+					$("#iosPrimary").show();
+				}
+				if (browser.versions.android) {
+					$("#androidPrimary").show();
+					$("#iosPrimary").hide();
+				}
+			} else {
+				$("#weixin-browser").hide();
+			}
+		});
+
+		function setCookie() {
+			var Days = 30;
+			var exp = new Date();
+			exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+
+			var _herf = location.href;
+			var idx = _herf.indexOf("code");
+			if (idx > 0) {
+				document.cookie = "recomm_code=" + _herf.substring(idx + 5) + ";expires=" + exp.toGMTString();
+			} else {
+				document.cookie = "recomm_code=QPKM40O;expires=" + exp.toGMTString();
+			}
+		}
+		setCookie();
+	</script>
+
+	<div style="display:none">
+		<script type="text/javascript" src="https://s9.cnzz.com/z_stat.php?id=1278255153&amp;web_id=1278255153"></script>
+	</div>
+
+</body>
+
+</html>

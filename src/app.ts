@@ -1,8 +1,12 @@
 export { }
 const express = require('express');
 const bodyParser = require("body-parser")
+const path = require('path')
 
 const app = express();
+
+// 静态资源
+app.use('/static', express.static('static'))
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -16,8 +20,8 @@ app.all('*', function (req, res, next) {
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
 
-app.use('/api/weibo',  require('./router/weibo'))
-app.use('/api/git',  require('./router/git'))
+app.use('/api/weibo', require('./router/weibo'))
+app.use('/api/git', require('./router/git'))
 app.use('/api/bookmark', require('./router/bookmark'))
 
 
