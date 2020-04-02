@@ -1,5 +1,9 @@
-var mysql = require('mysql');
-var connection = mysql.createConnection({
+export { }
+const express = require('express');
+const router = express.Router()
+
+const mysql = require('mysql');
+const connection = mysql.createConnection({
   host: '148.70.127.53',
   user: 'root',
   password: 'Luo3066590',
@@ -27,7 +31,7 @@ function insertBookmarks(title, url) {
       if (err) {
         console.log('插入出错', err);
         reject(false)
-        throw error;
+        throw Error('插入出错');
       }
       console.log('插入成功！')
       resole(true)
@@ -41,7 +45,7 @@ function deleteBookmark(id) {
       if (err) {
         console.log('删除出错', err);
         reject(false)
-        throw error;
+        throw Error('删除出错');
       }
       console.log('删除成功！')
       resole(true)
@@ -49,8 +53,21 @@ function deleteBookmark(id) {
   })
 }
 
-module.exports = {
-  selectBookmarks,
-  deleteBookmark,
-  insertBookmarks
-}
+router.get('/', async (req, res) => {
+  const bookmarks = await selectBookmarks()
+  res.send(bookmarks)
+})
+
+router.post('/', async (req, res) => {
+  const { title, url } = req.body
+  const result = await insertBookmarks(title, url)
+  res.send(result)
+})
+
+router.delete('/', async (req, res) => {
+  const { id } = req.query
+  const result = await deleteBookmark(id)
+  res.send(result)
+})
+
+module.exports = router
