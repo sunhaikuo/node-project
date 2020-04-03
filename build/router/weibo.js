@@ -13,12 +13,29 @@ const express = require('express');
 const request = require("request");
 const fs = require('fs');
 const path = require('path');
+function getUrlVars(url) {
+    var hash;
+    var myJson = {};
+    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        myJson[hash[0]] = hash[1];
+    }
+    return myJson;
+}
 const router = express.Router();
 const tokenParamArr = [];
 tokenParamArr.push('?gsid=_2A25zgf3CDeRxGeBO41oT9SbLyD6IHXVuF3YKrDV6PUJbkdAKLWHEkWpNRbgUglBKbnJKn0j01XWvqabFpG6QrBDx');
 tokenParamArr.push('&from=10A3193010');
 tokenParamArr.push('&c=iphone');
 tokenParamArr.push('&s=8b370efb');
+const urlArr = [
+    'https://api.weibo.cn/2/statuses/unread_hot_timeline?gsid=_2A25zguMTDeRxGeBG4lYV9SzNzjuIHXVuFnHbrDV6PUJbj9ANLXj8kWpNQfZvHWj18ikmF4z2M_R158Bner_8BHQv&sensors_mark=0&wm=3333_2001&sensors_is_first_day=false&from=10A3293010&sensors_device_id=019C6138-8C3E-462B-88CD-989677587E12&c=iphone&v_p=82&skin=default&s=8e344a45&v_f=1&networktype=wifi&b=0&lang=zh_CN&ua=iPhone12,5__weibo__10.3.2__iphone__os13.4&sflag=1&ft=1&aid=01AwC-VV0DeGEGMYFR4m_R9GzRErk_SEy-Q3NRyBluSBrnkIQ.&launchid=default',
+];
+urlArr.forEach((url) => {
+    const { gsid, from, c, s } = getUrlVars(url);
+    console.log(gsid, from, c, s);
+});
 function getParam(url, fid, containerid, max_id) {
     url = url.replace(/[\r\n]/g, '').replace('\ +', '');
     fid = fid || '102803_ctg1_600059_-_ctg1_600059';
