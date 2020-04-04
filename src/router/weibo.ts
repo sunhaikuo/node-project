@@ -20,11 +20,13 @@ function getParam(url, fid?, containerid?, max_id?) {
   }
 }
 
-function getUrls(type?: 'comments' | 'list' | 'channel') {
+function getUrls(type?: 'comments' | 'list' | 'channel' | 'hotSearch' | 'search') {
   const urls = [
     `https://api.weibo.cn/2/comments/build_comments${createParam()}&is_show_bulletin=2`,
     `https://api.weibo.cn/2/statuses/unread_hot_timeline${createParam()}`,
     `https://api.weibo.cn/2/groups/allgroups${createParam()}&fetch_hot=1`,
+    `https://api.weibo.cn/2/page${createParam()}&containerid=106003type%253D25%2526t%253D3%2526disable_hot%253D1%2526filter_type%253Drealtimehot`,
+    `https://api.weibo.cn/2/searchall${createParam()}`
   ]
   if (type === 'comments') {
     return urls[0]
@@ -32,6 +34,10 @@ function getUrls(type?: 'comments' | 'list' | 'channel') {
     return urls[1]
   } else if (type === 'channel') {
     return urls[2]
+  } else if (type === 'hotSearch') {
+    return urls[3]
+  } else if (type === 'search') {
+    return urls[4]
   } else {
     return urls
   }
@@ -63,6 +69,26 @@ function getChannel() {
   return new Promise((resolve, reject) => {
     request.get(getParam(url), function (error, response, body) {
       console.log(url, body)
+      resolve(JSON.parse(body))
+    });
+  })
+}
+
+function getHotSearch() {
+  const url = getUrls('hotSearch');
+  return new Promise((resolve, reject) => {
+    request.get(getParam(url), function (error, response, body) {
+      console.log(url, body)
+      resolve(JSON.parse(body))
+    });
+  })
+}
+
+function getSearch(q) {
+  const url = getUrls('search') + `&containerid=${encodeURIComponent(`100103type=1&t=3&q=#${q}#`)}`;
+  return new Promise((resolve, reject) => {
+    request.get(getParam(url), function (error, response, body) {
+      console.log(url)
       resolve(JSON.parse(body))
     });
   })
@@ -106,6 +132,19 @@ router.get('/urls', async (req, res) => {
   res.send({
     urls: getUrls()
   })
+})
+
+router.get('/hot_search', async (req, res) => {
+  // http://127.0.0.1:5000/api/weibo/hot_search
+  const body = await getHotSearch()
+  res.send(body)
+})
+
+router.get('/search', async (req, res) => {
+  // http://127.0.0.1:5000/api/weibo/search
+  const { q } = req.query
+  const body = await getSearch(q)
+  res.send(body)
 })
 
 router.get('/image', async (req, res) => {
