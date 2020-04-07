@@ -162,6 +162,11 @@ router.get('/hot_video', (req, res) => __awaiter(void 0, void 0, void 0, functio
     const body = yield getHotVideo();
     res.send(body);
 }));
+router.get('/timeout3', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    setTimeout(() => {
+        res.send({ ok: 1 });
+    }, 3 * 1000);
+}));
 router.get('/image', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { url } = req.query;
     if (url) {

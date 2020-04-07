@@ -166,7 +166,7 @@ router.get('/hot_video', async (req, res) => {
 
 router.get('/timeout3', async (req, res) => {
   setTimeout(() => {
-    res.send('ok')
+    res.send({ ok: 1 })
   }, 3 * 1000)
 })
 
