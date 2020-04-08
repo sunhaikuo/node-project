@@ -4,6 +4,7 @@ const request = require("request");
 const fs = require('fs-extra')
 const path = require('path')
 import { createParam } from '../utils/weibo'
+import { url } from 'inspector';
 
 const router = express.Router()
 
@@ -28,6 +29,9 @@ function getUrls(type?: 'comments' | 'list' | 'channel' | 'hotSearch' | 'search'
     `https://api.weibo.cn/2/page${createParam()}&containerid=106003type%253D25%2526t%253D3%2526disable_hot%253D1%2526filter_type%253Drealtimehot`,
     `https://api.weibo.cn/2/searchall${createParam()}`
   ]
+
+  console.log(urls.join('\n'))
+
   if (type === 'comments') {
     return urls[0]
   } else if (type === 'list') {
@@ -55,7 +59,7 @@ function getComments(mid) {
 function getWeiboList(fid, containerid, max_id) {
   const url = getUrls('list')
   const param = getParam(url, fid, containerid, max_id)
-  // console.log(param)
+  console.log(param)
   return new Promise((resolve, reject) => {
     request.post(param, function (error, response, body) {
       // console.log(url, body)

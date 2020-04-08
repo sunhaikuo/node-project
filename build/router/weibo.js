@@ -35,6 +35,7 @@ function getUrls(type) {
         `https://api.weibo.cn/2/page${weibo_1.createParam()}&containerid=106003type%253D25%2526t%253D3%2526disable_hot%253D1%2526filter_type%253Drealtimehot`,
         `https://api.weibo.cn/2/searchall${weibo_1.createParam()}`
     ];
+    console.log(urls.join('\n'));
     if (type === 'comments') {
         return urls[0];
     }
@@ -66,7 +67,7 @@ function getComments(mid) {
 function getWeiboList(fid, containerid, max_id) {
     const url = getUrls('list');
     const param = getParam(url, fid, containerid, max_id);
-    // console.log(param)
+    console.log(param);
     return new Promise((resolve, reject) => {
         request.post(param, function (error, response, body) {
             // console.log(url, body)
