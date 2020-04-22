@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 
 app.use('/api/weibo', require('./router/weibo'))
 app.use('/api/git', require('./router/git'))
+app.use('/api/hospital', require('./router/hospital'))
 app.use('/api/bookmark', require('./router/bookmark'))
 
 
