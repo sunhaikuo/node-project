@@ -1,28 +1,68 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 const axios = require('axios');
-const send = require('./sendEmail');
+const express = require('express');
+const router = express.Router();
+const email = require('./email');
 /**
- * 阜外医院预约
+ * 阜外医院预约 - 吴瑛
  */
-function getData() {
-    axios.request({
-        url: 'http://app.fuwaihospital.org:8181/OpAppt/DoctorNew',
-        method: 'POST',
-        headers: {
-            'Cookie': 'ASP.NET_SessionId=4x50jqa2b0zvzkupvi2ls1lg; ASP.NET_SessionId_NS_Sig=oenCV6mdnXYlvAnt',
-            'FW-Push-Token': 'c5ca672f4dddedbb2edefc378e2d066b4627532e6d55c8aab178106aa4d422d0'
-        },
-        params: { "doctorCode": "2131", "halfday": true }
-    }).then((res) => {
-        const list = res.data;
-        for (let i = 0; i < list.length; i++) {
-            const item = list[i];
-            if (['约满', '', '停诊'].indexOf(item.pm_info) === -1) {
-                send(item.pm_info);
-                break;
-            }
-        }
+function getWuying() {
+    return new Promise((resolve) => {
+        axios.request({
+            url: 'http://app.fuwaihospital.org:8181/OpAppt/DoctorNew',
+            method: 'POST',
+            params: { "doctorCode": "2131", "halfday": true }
+        }).then((res) => {
+            resolve(res.data);
+        });
     });
 }
-module.exports = function getNum(params) {
-    setInterval(getData, 1000 * 60);
-};
+router.get('/wuying', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // http://127.0.0.1:5000/api/hospital/wuying
+    const body = yield getWuying();
+    res.send(body);
+}));
+let open = false;
+let inter;
+let cnt = 0;
+router.get('/open', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // http://127.0.0.1:5000/api/hospital/open
+    if (open == false) {
+        open = true;
+        inter = setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+            const res = yield checkData();
+            if (res) {
+                cnt++;
+                if (cnt > 2) {
+                    open = false;
+                    clearInterval(inter);
+                }
+            }
+        }), 60 * 1000);
+    }
+    res.send('Open');
+}));
+function checkData() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((reslove) => __awaiter(this, void 0, void 0, function* () {
+            let data = yield getWuying();
+            data = JSON.stringify(data);
+            if (data && data.indexOf('立即预约') > -1) {
+                email('吴大夫有号了！');
+                reslove(true);
+            }
+            reslove(false);
+        }));
+    });
+}
+module.exports = router;

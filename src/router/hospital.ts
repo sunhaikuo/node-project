@@ -50,8 +50,7 @@ async function checkData() {
   return new Promise(async (reslove) => {
     let data: any = await getWuying()
     data = JSON.stringify(data)
-    // if (data && data.indexOf('立即预约') > -1) {
-      if (data && data.indexOf('约满') > -1) {
+    if (data && data.indexOf('立即预约') > -1) { 
       email('吴大夫有号了！')
       reslove(true)
     }
