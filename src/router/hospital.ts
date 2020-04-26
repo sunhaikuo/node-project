@@ -24,37 +24,47 @@ router.get('/wuying', async (req, res) => {
   res.send(body)
 })
 
-let open = false
+let open = true
 let inter
-let cnt = 0
+let preDate = '';
 
-router.get('/open', async (req, res) => {
-  // http://127.0.0.1:5000/api/hospital/open
-  if (open == false) {
-    open = true
-    inter = setInterval(async () => {
-      const res = await checkData()
-      if (res) {
-        cnt++
-        if (cnt > 2) {
-          open = false
-          clearInterval(inter)
-        }
-      }
-    }, 60 * 1000)
+function guahao() {
+  if (!open) {
+    return
   }
-  res.send('Open')
+  inter = setInterval(async () => {
+    console.log(new Date, '检查中...')
+    await checkData()
+  }, 10 * 1000)
+}
+
+guahao()
+
+
+router.get('/close', async (req, res) => {
+  // http://127.0.0.1:5000/api/hospital/close
+  open = false
+  res.send('Open false')
 })
 
 async function checkData() {
   return new Promise(async (reslove) => {
     let data: any = await getWuying()
-    data = JSON.stringify(data)
-    if (data && data.indexOf('立即预约') > -1) { 
-      email('吴大夫有号了！')
-      reslove(true)
+    let canHandleArr = []
+    if (data && Array.isArray(data)) {
+      canHandleArr = data.filter((item) => {
+        return item['pm_info'] === '立即预约'
+      })
     }
-    reslove(false)
+    if (canHandleArr && canHandleArr.length > 0) {
+      const lastDate = canHandleArr[canHandleArr.length - 1].date
+      if (lastDate != preDate) {
+        preDate = lastDate
+        console.log(lastDate + '有号了')
+        email('吴大夫有号了！' + lastDate)
+        reslove(lastDate)
+      }
+    }
   })
 }
 

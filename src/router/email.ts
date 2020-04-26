@@ -14,21 +14,18 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-let sendInfo = ''
-
-let mailOptions = {
-  from: '"阜外医院挂号" <369019497@qq.com>', // sender address
-  to: 'sunhaikuo_2019@qq.com', // list of receivers
-  subject: '挂号', // Subject line
-  // 发送text或者html格式
-  // text: 'Hello world?', // plain text body
-  html: `<b>Yes！${sendInfo}</b>` // html body
-};
-
-
 
 module.exports = function send(params) {
-  sendInfo = params
+
+  let mailOptions = {
+    from: `"阜外医院 - ${params}" <369019497@qq.com>`, // sender address
+    to: 'sunhaikuo_2019@qq.com', // list of receivers
+    subject: '挂号' + params, // Subject line
+    // 发送text或者html格式
+    // text: 'Hello world?', // plain text body
+    html: `<b>Yes！${params}</b>` // html body
+  };
+
   // send mail with defined transport object
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
