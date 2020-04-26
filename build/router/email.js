@@ -10,17 +10,15 @@ let transporter = nodemailer.createTransport({
         pass: 'sptxzolplggsbifd',
     }
 });
-let sendInfo = '';
-let mailOptions = {
-    from: '"阜外医院挂号" <369019497@qq.com>',
-    to: 'sunhaikuo_2019@qq.com',
-    subject: '挂号',
-    // 发送text或者html格式
-    // text: 'Hello world?', // plain text body
-    html: `<b>Yes！${sendInfo}</b>` // html body
-};
 module.exports = function send(params) {
-    sendInfo = params;
+    let mailOptions = {
+        from: `"阜外医院 - ${params}" <369019497@qq.com>`,
+        to: 'sunhaikuo_2019@qq.com',
+        subject: '挂号' + params,
+        // 发送text或者html格式
+        // text: 'Hello world?', // plain text body
+        html: `<b>Yes！${params}</b>` // html body
+    };
     // send mail with defined transport object
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

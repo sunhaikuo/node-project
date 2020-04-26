@@ -32,36 +32,43 @@ router.get('/wuying', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const body = yield getWuying();
     res.send(body);
 }));
-let open = false;
+let open = true;
 let inter;
-let cnt = 0;
-router.get('/open', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // http://127.0.0.1:5000/api/hospital/open
-    if (open == false) {
-        open = true;
-        inter = setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
-            const res = yield checkData();
-            if (res) {
-                cnt++;
-                if (cnt > 2) {
-                    open = false;
-                    clearInterval(inter);
-                }
-            }
-        }), 60 * 1000);
+let preDate = '';
+function guahao() {
+    if (!open) {
+        return;
     }
-    res.send('Open');
+    inter = setInterval(() => __awaiter(this, void 0, void 0, function* () {
+        console.log(new Date, '检查中...');
+        yield checkData();
+    }), 10 * 1000);
+}
+guahao();
+router.get('/close', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // http://127.0.0.1:5000/api/hospital/close
+    open = false;
+    res.send('Open false');
 }));
 function checkData() {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((reslove) => __awaiter(this, void 0, void 0, function* () {
             let data = yield getWuying();
-            data = JSON.stringify(data);
-            if (data && data.indexOf('立即预约') > -1) {
-                email('吴大夫有号了！');
-                reslove(true);
+            let canHandleArr = [];
+            if (data && Array.isArray(data)) {
+                canHandleArr = data.filter((item) => {
+                    return item['pm_info'] === '立即预约';
+                });
             }
-            reslove(false);
+            if (canHandleArr && canHandleArr.length > 0) {
+                const lastDate = canHandleArr[canHandleArr.length - 1].date;
+                if (lastDate != preDate) {
+                    preDate = lastDate;
+                    console.log(lastDate + '有号了');
+                    email('吴大夫有号了！' + lastDate);
+                    reslove(lastDate);
+                }
+            }
         }));
     });
 }

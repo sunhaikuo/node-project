@@ -35,7 +35,7 @@ function guahao() {
   inter = setInterval(async () => {
     console.log(new Date, '检查中...')
     await checkData()
-  }, 10 * 1000)
+  }, 60 * 1000)
 }
 
 guahao()
