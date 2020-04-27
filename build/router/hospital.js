@@ -42,7 +42,7 @@ function guahao() {
     inter = setInterval(() => __awaiter(this, void 0, void 0, function* () {
         console.log(new Date, '检查中...');
         yield checkData();
-    }), 10 * 1000);
+    }), 60 * 1000);
 }
 guahao();
 router.get('/close', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
