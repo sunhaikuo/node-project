@@ -13,7 +13,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const connection = mysql.createConnection({
-    host: '148.70.127.53',
+    host: '82.157.162.70',
     user: 'root',
     password: 'Luo3066590',
     database: 'sunhk_db'
