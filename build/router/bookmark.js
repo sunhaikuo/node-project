@@ -12,16 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
+const pinyin = require('pinyin');
 const connection = mysql.createConnection({
     host: '82.157.162.70',
     user: 'root',
     password: 'Luo3066590',
-    database: 'sunhk_db'
+    database: 'sunhk_db',
 });
 connection.connect();
 function selectBookmarks() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT * from chrome_bookmark', function (error, results, fields) {
+        connection.query('SELECT * from chrome_bookmark_py', function (error, results, fields) {
             if (error)
                 throw error;
             resolve(results);
@@ -29,9 +30,26 @@ function selectBookmarks() {
         });
     });
 }
-function insertBookmarks(title, url) {
+function selectBookmarkByUrl(url) {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * from chrome_bookmark_py where url = ?', [url], function (error, results, fields) {
+            if (error)
+                throw error;
+            resolve(results);
+            console.log('查询出的数据行数: ', results.length);
+        });
+    });
+}
+function insertBookmarks(title, url, isFavi) {
+    const pyList = pinyin(title, {
+        style: pinyin.STYLE_INITIALS,
+    });
+    const noramlList = pinyin(title, {
+        style: pinyin.STYLE_NORMAL,
+    });
+    console.log('insertBookmarks', arguments, pyList.join(','), noramlList.join(','));
     return new Promise((resole, reject) => {
-        connection.query('INSERT INTO chrome_bookmark(title, url) VALUE (?, ?)', [title, url], (err, results) => {
+        connection.query('INSERT INTO chrome_bookmark_py(title, url, pinyin, is_favi) VALUE (?, ?, ?, ?)', [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi], (err, results) => {
             if (err) {
                 console.log('插入出错', err);
                 reject(false);
@@ -42,9 +60,9 @@ function insertBookmarks(title, url) {
         });
     });
 }
-function deleteBookmark(id) {
+function deleteBookmark(url) {
     return new Promise((resole, reject) => {
-        connection.query('delete from  chrome_bookmark where id = ' + id, (err, results) => {
+        connection.query('delete from  chrome_bookmark_py where url = ?', [url], (err, results) => {
             if (err) {
                 console.log('删除出错', err);
                 reject(false);
@@ -55,18 +73,27 @@ function deleteBookmark(id) {
         });
     });
 }
+router.post('/modify', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, url, isFavi } = req.body;
+    const bookmark = yield selectBookmarkByUrl(url);
+    yield deleteBookmark(url);
+    const result = yield insertBookmarks(title, url, isFavi !== null && isFavi !== void 0 ? isFavi : bookmark.isFavi);
+    res.send(result);
+}));
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const bookmarks = yield selectBookmarks();
-    res.send(bookmarks);
+    const result = yield selectBookmarks();
+    res.send(result);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, url } = req.body;
-    const result = yield insertBookmarks(title, url);
+    const { title, url, isFavi } = req.body;
+    console.log('insertBookmarks', title, url, isFavi);
+    const result = yield insertBookmarks(title, url, isFavi !== null && isFavi !== void 0 ? isFavi : 0);
     res.send(result);
 }));
 router.delete('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.query;
-    const result = yield deleteBookmark(id);
+    const { url } = req.query;
+    console.log('deleteBookmark', url);
+    const result = yield deleteBookmark(url);
     res.send(result);
 }));
 module.exports = router;
