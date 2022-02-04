@@ -40,7 +40,7 @@ function selectBookmarkByUrl(url) {
         });
     });
 }
-function insertBookmarks(title, url, isFavi) {
+function insertBookmarks(title, url, isFavi, tm) {
     const pyList = pinyin(title, {
         style: pinyin.STYLE_INITIALS,
     });
@@ -49,7 +49,7 @@ function insertBookmarks(title, url, isFavi) {
     });
     console.log('insertBookmarks', arguments, pyList.join(','), noramlList.join(','));
     return new Promise((resole, reject) => {
-        connection.query('INSERT INTO chrome_bookmark_py(title, url, pinyin, is_favi) VALUE (?, ?, ?, ?)', [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi], (err, results) => {
+        connection.query('INSERT INTO chrome_bookmark_py(title, url, pinyin, is_favi, tm) VALUE (?, ?, ?, ?, ?)', [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi, tm], (err, results) => {
             if (err) {
                 console.log('插入出错', err);
                 reject(false);
@@ -77,7 +77,7 @@ router.post('/modify', (req, res) => __awaiter(void 0, void 0, void 0, function*
     const { title, url, isFavi } = req.body;
     const bookmark = yield selectBookmarkByUrl(url);
     yield deleteBookmark(url);
-    const result = yield insertBookmarks(title, url, isFavi !== null && isFavi !== void 0 ? isFavi : bookmark.isFavi);
+    const result = yield insertBookmarks(title, url, isFavi !== null && isFavi !== void 0 ? isFavi : bookmark.isFavi, bookmark.tm);
     res.send(result);
 }));
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -85,9 +85,12 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(result);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, url, isFavi } = req.body;
-    console.log('insertBookmarks', title, url, isFavi);
-    const result = yield insertBookmarks(title, url, isFavi !== null && isFavi !== void 0 ? isFavi : 0);
+    const { title, url, isFavi, tm } = req.body;
+    const bookmark = yield selectBookmarkByUrl(url);
+    console.log('query bookmark', bookmark);
+    yield deleteBookmark(url);
+    console.log('insertBookmarks', title, url, isFavi, tm);
+    const result = yield insertBookmarks(title, url, isFavi !== null && isFavi !== void 0 ? isFavi : 0, tm);
     res.send(result);
 }));
 router.delete('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

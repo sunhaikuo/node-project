@@ -18,11 +18,12 @@ interface IBookmark {
     title: string;
     url: string;
     isFavi: number;
+    tm: number;
 }
 
 function selectBookmarks() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT * from chrome_bookmark_py', function (error, results, fields) {
+        connection.query('SELECT * from chrome_bookmark_py order by tm desc', function (error, results, fields) {
             if (error) throw error;
             resolve(results);
             console.log('查询出的数据行数: ', results.length);
@@ -35,12 +36,13 @@ function selectBookmarkByUrl(url: string): Promise<IBookmark> {
         connection.query('SELECT * from chrome_bookmark_py where url = ?', [url], function (error, results, fields) {
             if (error) throw error;
             resolve(results);
+
             console.log('查询出的数据行数: ', results.length);
         });
     });
 }
 
-function insertBookmarks(title, url, isFavi) {
+function insertBookmarks(title, url, isFavi, tm) {
     const pyList = pinyin(title, {
         style: pinyin.STYLE_INITIALS, // 设置拼音风格
     });
@@ -53,8 +55,8 @@ function insertBookmarks(title, url, isFavi) {
 
     return new Promise((resole, reject) => {
         connection.query(
-            'INSERT INTO chrome_bookmark_py(title, url, pinyin, is_favi) VALUE (?, ?, ?, ?)',
-            [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi],
+            'INSERT INTO chrome_bookmark_py(title, url, pinyin, is_favi, tm) VALUE (?, ?, ?, ?, ?)',
+            [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi, tm],
             (err, results) => {
                 if (err) {
                     console.log('插入出错', err);
@@ -86,7 +88,7 @@ router.post('/modify', async (req, res) => {
     const { title, url, isFavi } = req.body;
     const bookmark = await selectBookmarkByUrl(url);
     await deleteBookmark(url);
-    const result = await insertBookmarks(title, url, isFavi ?? bookmark.isFavi);
+    const result = await insertBookmarks(title, url, isFavi ?? bookmark.isFavi, bookmark.tm);
     res.send(result);
 });
 
@@ -96,9 +98,13 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { title, url, isFavi } = req.body;
-    console.log('insertBookmarks', title, url, isFavi);
-    const result = await insertBookmarks(title, url, isFavi ?? 0);
+    const { title, url, isFavi, tm } = req.body;
+    const bookmark = await selectBookmarkByUrl(url);
+
+    console.log('query bookmark', bookmark);
+    await deleteBookmark(url);
+    console.log('insertBookmarks', title, url, isFavi, tm);
+    const result = await insertBookmarks(title, url, isFavi ?? 0, tm);
     res.send(result);
 });
 
