@@ -55,7 +55,7 @@ function insertBookmarks(title, url, isFavi, tm) {
 
     return new Promise((resole, reject) => {
         connection.query(
-            'INSERT INTO chrome_bookmark_py(title, url, pinyin, is_favi, tm) VALUE (?, ?, ?, ?, ?)',
+            'INSERT INTO chrome_bookmark_py(title, url, pinyin, isFavi, tm) VALUE (?, ?, ?, ?, ?)',
             [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi, tm],
             (err, results) => {
                 if (err) {
@@ -72,7 +72,7 @@ function insertBookmarks(title, url, isFavi, tm) {
 
 function deleteBookmark(url) {
     return new Promise((resole, reject) => {
-        connection.query('delete from  chrome_bookmark_py where url = ?', [url], (err, results) => {
+        connection.query('delete from chrome_bookmark_py where url = ?', [url], (err, results) => {
             if (err) {
                 console.log('删除出错', err);
                 reject(false);
@@ -98,9 +98,9 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { title, url, isFavi, tm } = req.body;
+    const { title, url, isFavi } = req.body;
     const bookmark = await selectBookmarkByUrl(url);
-
+    const tm = Date.now();
     console.log('query bookmark', bookmark);
     await deleteBookmark(url);
     console.log('insertBookmarks', title, url, isFavi, tm);

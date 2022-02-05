@@ -22,7 +22,7 @@ const connection = mysql.createConnection({
 connection.connect();
 function selectBookmarks() {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT * from chrome_bookmark_py', function (error, results, fields) {
+        connection.query('SELECT * from chrome_bookmark_py order by tm desc', function (error, results, fields) {
             if (error)
                 throw error;
             resolve(results);
@@ -49,7 +49,7 @@ function insertBookmarks(title, url, isFavi, tm) {
     });
     console.log('insertBookmarks', arguments, pyList.join(','), noramlList.join(','));
     return new Promise((resole, reject) => {
-        connection.query('INSERT INTO chrome_bookmark_py(title, url, pinyin, is_favi, tm) VALUE (?, ?, ?, ?, ?)', [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi, tm], (err, results) => {
+        connection.query('INSERT INTO chrome_bookmark_py(title, url, pinyin, isFavi, tm) VALUE (?, ?, ?, ?, ?)', [title, url, pyList.join('') + '-' + noramlList.join(''), isFavi, tm], (err, results) => {
             if (err) {
                 console.log('插入出错', err);
                 reject(false);
@@ -85,8 +85,9 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(result);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, url, isFavi, tm } = req.body;
+    const { title, url, isFavi } = req.body;
     const bookmark = yield selectBookmarkByUrl(url);
+    const tm = Date.now();
     console.log('query bookmark', bookmark);
     yield deleteBookmark(url);
     console.log('insertBookmarks', title, url, isFavi, tm);
