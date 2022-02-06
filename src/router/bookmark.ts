@@ -84,11 +84,37 @@ function deleteBookmark(url) {
     });
 }
 
-router.post('/modify', async (req, res) => {
-    const { title, url, isFavi } = req.body;
-    const bookmark = await selectBookmarkByUrl(url);
-    await deleteBookmark(url);
-    const result = await insertBookmarks(title, url, isFavi ?? bookmark.isFavi, bookmark.tm);
+function deleteBookmarkById(id) {
+    return new Promise((resole, reject) => {
+        connection.query('delete from chrome_bookmark_py where id = ?', [id], (err, results) => {
+            if (err) {
+                console.log('删除出错', err);
+                reject(false);
+                throw Error('删除出错');
+            }
+            console.log('删除成功！');
+            resole(true);
+        });
+    });
+}
+
+function updateBookmark(id, isFavi) {
+    return new Promise((resole, reject) => {
+        connection.query('update chrome_bookmark_py SET isFavi = ?, tm = ? where id = ?', [isFavi, Date.now(), id], (err, results) => {
+            if (err) {
+                console.log('修改出错', err);
+                reject(false);
+                throw Error('修改出错');
+            }
+            console.log('修改成功！');
+            resole(true);
+        });
+    });
+}
+
+router.post('/modifyFavi', async (req, res) => {
+    const { id, isFavi } = req.body;
+    const result = await updateBookmark(id, isFavi);
     res.send(result);
 });
 
@@ -109,9 +135,9 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/', async (req, res) => {
-    const { url } = req.query;
-    console.log('deleteBookmark', url);
-    const result = await deleteBookmark(url);
+    const { id } = req.query;
+    console.log('deleteBookmark', id);
+    const result = await deleteBookmarkById(id);
     res.send(result);
 });
 

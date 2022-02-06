@@ -62,7 +62,7 @@ function insertBookmarks(title, url, isFavi, tm) {
 }
 function deleteBookmark(url) {
     return new Promise((resole, reject) => {
-        connection.query('delete from  chrome_bookmark_py where url = ?', [url], (err, results) => {
+        connection.query('delete from chrome_bookmark_py where url = ?', [url], (err, results) => {
             if (err) {
                 console.log('删除出错', err);
                 reject(false);
@@ -73,11 +73,35 @@ function deleteBookmark(url) {
         });
     });
 }
-router.post('/modify', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, url, isFavi } = req.body;
-    const bookmark = yield selectBookmarkByUrl(url);
-    yield deleteBookmark(url);
-    const result = yield insertBookmarks(title, url, isFavi !== null && isFavi !== void 0 ? isFavi : bookmark.isFavi, bookmark.tm);
+function deleteBookmarkById(id) {
+    return new Promise((resole, reject) => {
+        connection.query('delete from chrome_bookmark_py where id = ?', [id], (err, results) => {
+            if (err) {
+                console.log('删除出错', err);
+                reject(false);
+                throw Error('删除出错');
+            }
+            console.log('删除成功！');
+            resole(true);
+        });
+    });
+}
+function updateBookmark(id, isFavi) {
+    return new Promise((resole, reject) => {
+        connection.query('update chrome_bookmark_py SET isFavi = ?, tm = ? where id = ?', [isFavi, Date.now(), id], (err, results) => {
+            if (err) {
+                console.log('修改出错', err);
+                reject(false);
+                throw Error('修改出错');
+            }
+            console.log('修改成功！');
+            resole(true);
+        });
+    });
+}
+router.post('/modifyFavi', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, isFavi } = req.body;
+    const result = yield updateBookmark(id, isFavi);
     res.send(result);
 }));
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -95,9 +119,9 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(result);
 }));
 router.delete('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { url } = req.query;
-    console.log('deleteBookmark', url);
-    const result = yield deleteBookmark(url);
+    const { id } = req.query;
+    console.log('deleteBookmark', id);
+    const result = yield deleteBookmarkById(id);
     res.send(result);
 }));
 module.exports = router;
